@@ -1,0 +1,39 @@
+int foo ;
+int tab[51];
+int foo[14] ;
+void foo (int tab[],int ddd[], int a , int c , int f ){
+    int a5 ;
+    return ;
+    return a == 5 ;
+    return a ;
+    return 4 ;
+    foo(65);
+    foo( a == 5);
+    foo(!a);
+    foo(!5);
+    foo( fonction(a) );
+    a = a + 5 ;
+    a = a / 5 ;
+    a = a || 5 ;
+    a = 'k';
+    return a > 5;
+    return a < b ;
+    {return ;}
+    {return a == 5;}
+    {{}}
+    { a = 5;}
+    return !a ;
+    if ( a == b){a = 3 ;}
+    while(a<b){return 1;}
+
+    if(a == b){
+        a = 3;
+    }else{
+        a = 4;
+    }
+}
+int main (void){
+    int a ;
+    a = 3;
+    days[5]=duration[(now+span)%12];
+}

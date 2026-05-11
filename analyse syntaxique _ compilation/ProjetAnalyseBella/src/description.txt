@@ -1,0 +1,15 @@
+Ce programme est un outil conçu pour analyser les fichiers écrits dans un format nommé .tpc. Il s'agit d'un analyseur syntaxique et 
+lexical : le_parser.y et le_lexer.l,
+Le principal objectif de ce parser est de parcourir un fichier .tpc pour y détecter d'éventuelles erreurs lexicales ou 
+grammaticales. Lorsqu'une erreur est trouvée, le parser renvoie la valeur 1 et indique la ligne où l'erreur a été détectée,
+En l'absence d'erreurs, le parser renvoie 0 et confirme que le programme est syntaxiquement correct en affichant le message : 
+"L'expression est engendrée par la grammaire".
+
+Les options :
+
+-t : Cette commande offre une visualisation de l'Arbre Syntaxique Abstrait (AST) du programme.
+
+-h : Ici, l'utilisateur a la possibilité de consulter  une description de l’interface utilisateur et termine l’exécution
+
+-tl (pour "tree_with_label") : Cette fonctionnalité présente une version alternative de l'AST, où les nœuds sont identifiés par des
+ labels . Cela permet une compréhension plus technique de la structure du programme.

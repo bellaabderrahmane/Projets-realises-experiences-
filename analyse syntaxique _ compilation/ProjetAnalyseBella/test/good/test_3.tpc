@@ -1,0 +1,7 @@
+int vaiable ;
+
+
+int main(char A[]){
+    return 12;
+}
+

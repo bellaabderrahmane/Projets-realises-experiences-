@@ -1,0 +1,4 @@
+char c = 'A;
+void test(void){
+    return;
+}

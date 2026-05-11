@@ -1,0 +1,17 @@
+void foo (int tab2[],int tab3[], int a , int c , int f ){
+    
+
+
+    a = 5 ;
+    foo(65);
+    foo( a == 5);
+    foo(!a);
+    foo(!5);
+    foo( fonction(a) );
+    
+    {{}}
+    { a = 5;}
+    return !a ;
+    
+   
+    return ;

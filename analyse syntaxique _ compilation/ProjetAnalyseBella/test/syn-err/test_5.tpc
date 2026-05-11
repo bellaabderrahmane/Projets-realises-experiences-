@@ -1,0 +1,9 @@
+ foo( a == 5);
+    foo(!a);
+    foo(!5);
+    foo( fonction(a) );
+    
+    {{}}
+    { a = 5;}
+    return !a ;
+    

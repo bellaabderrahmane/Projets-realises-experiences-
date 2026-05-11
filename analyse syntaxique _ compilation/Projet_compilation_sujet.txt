@@ -1,0 +1,27 @@
+Objectif : Écrire un compilateur en C pour le langage tpc (sous-ensemble de C) produisant du code NASM 64 bits compatible Unix avec conventions AMD64.
+
+Fonctionnalités principales :
+
+Détecter erreurs lexicales, syntaxiques et sémantiques et afficher des messages précis.
+
+Gérer variables, fonctions, tableaux et types (int, char).
+
+Traduire les expressions et instructions en code assembleur exécutable.
+
+Afficher arbre abstrait et tables des symboles.
+
+Fournir une interface en ligne de commande avec options : afficher arbre (-t), tables (-s) et aide (-h).
+
+Organisation :
+
+Répertoire structuré : src (sources), bin (binaire tpcc), obj (fichiers intermédiaires), rep (rapport), test (jeux d’essais : bons, erreurs syntaxiques, sémantiques, avertissements).
+
+Génération de code cible avec nom par défaut _anonymous.asm ou basé sur le fichier d’entrée.
+
+Travail demandé :
+
+Quatre types de tests pour valider compilation et détection d’erreurs.
+
+Script de déploiement pour un rapport global.
+
+Modification possible de la grammaire pour lever les conflits sans changer le langage.

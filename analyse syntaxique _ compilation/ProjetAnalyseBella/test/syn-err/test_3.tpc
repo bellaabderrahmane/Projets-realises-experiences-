@@ -1,0 +1,6 @@
+int vaiable ;
+
+
+int main(char A[2]){
+    return 12;
+}

@@ -1,0 +1,11 @@
+void main(void){
+    int var ;
+
+     int j ;
+    int k,l,tab6[1];
+
+
+
+    
+    foo(foo1(a + a));
+}

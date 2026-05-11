@@ -1,0 +1,53 @@
+int foo ;
+
+
+char 
+tab2[
+  12  
+]
+;
+void foo (int tab2[],int tab3[], int a , int c , int f ){
+    
+  while(a<b)
+    if(a == b)
+        a = 3;
+        if (c == d)
+            c = 2;
+    else
+        a = 4;
+
+  if ( a == b ){
+    return a ;
+    return 1 ;
+    if (g == g){
+      return 455;
+    }
+  }else {
+    return 5 ;
+  }
+    a = 5 ;
+    foo(65);
+    foo( a == 5);
+    foo(!a);
+    foo(!5);
+    foo( fonction(a) );
+    
+    {{{{{{}}}}}}
+    { a = 5;}
+    return !a ;
+    
+   
+    return ;
+    return a == 5 ;
+    return a ;
+    return 4 ;
+    return a > 5;
+    return a < b ;
+    {return ;}
+    {return a == 5;}
+}
+
+
+int coo(void){
+int a ;
+}

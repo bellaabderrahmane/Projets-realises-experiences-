@@ -1,0 +1,8 @@
+void main(void){
+    
+    a = a + 5 ;
+    a = a / 5 ;
+    a = a || 5 ;
+    a = 'k';
+    a = '\'';
+}

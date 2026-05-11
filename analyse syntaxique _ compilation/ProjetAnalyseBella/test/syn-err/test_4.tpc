@@ -1,0 +1,11 @@
+int foo ;
+
+
+char 
+tab2[
+  12  
+]
+;
+void foo (int tab2[],int tab3[], int a , int c , int f ){
+    
+

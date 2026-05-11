@@ -1,0 +1,10 @@
+int a,f ;
+
+void main(void){
+    if ( a == b )
+        return a ;
+
+    tab[5] = tab2[1 +(5 *2)];
+
+    
+}

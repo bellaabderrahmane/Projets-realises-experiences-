@@ -1,0 +1,79 @@
+Objectif :
+Le projet consiste à développer un analyseur syntaxique pour un petit langage de programmation appelé tpc, proche d’un sous-ensemble du langage C, en utilisant flex pour l’analyse lexicale et bison pour l’analyse syntaxique. L’analyseur doit détecter les erreurs lexicales et syntaxiques et générer un arbre abstrait (AST) lorsque le programme source est correct.
+
+Fonctionnalités principales :
+
+Analyse lexicale :
+
+Reconnaissance des identificateurs, mots-clés, constantes numériques, caractères littéraux et opérateurs.
+
+Gestion des commentaires (/* ... */ et // ...) et des caractères spéciaux (\n, \t).
+
+Détection et signalement des lexèmes non valides.
+
+Analyse syntaxique :
+
+Construction d’un arbre abstrait représentant la structure du programme tpc.
+
+Gestion des fonctions, déclarations de variables locales et globales, instructions et expressions.
+
+Extension de la grammaire pour supporter les tableaux à une dimension, tant pour les variables que pour les paramètres de fonction.
+
+Interface utilisateur :
+
+Exécution via ligne de commande :
+
+./tpcas [OPTIONS] avec redirection < FILE.tpc
+
+Possibilité d’ajouter ./tpcas [OPTIONS] FILE.tpc
+
+Options minimales :
+
+-t, --tree : affiche l’arbre abstrait
+
+-h, --help : affiche l’aide
+
+Valeurs de retour :
+
+0 : programme correct
+
+1 : erreur lexicale ou syntaxique
+
+≥2 : autres erreurs (ligne de commande, mémoire, etc.)
+
+Gestion des arbres abstraits :
+
+Chaque opérateur est un nœud interne et ses opérandes sont les fils.
+
+Les listes sont représentées par un nœud unique avec tous les éléments dans le bon ordre.
+
+Les caractères de ponctuation ne doivent pas apparaître comme nœuds.
+
+Tests automatisés :
+
+Deux ensembles de tests : programmes corrects et programmes incorrects.
+
+Script de déploiement pour produire un rapport global et un score basé sur les valeurs de retour.
+
+Organisation et dépôt :
+
+Répertoire principal : ProjetASL3_NOM1_NOM2
+
+Sous-répertoires : src, bin, obj, test/good, test/syn-err, rep
+
+Makefile à la racine pour compiler le projet.
+
+Dépôt sous forme d’archive compressée .tar.gz.
+
+Livrables :
+
+Analyseur syntaxique fonctionnel (tpcas)
+
+Arbre abstrait affiché sur sortie standard
+
+Rapport détaillant les choix techniques et difficultés rencontrées
+
+Jeux de tests et script d’exécution automatisé
+
+Remarque :
+L’analyseur ne doit pas altérer le langage généré. L’accent est mis sur la détection précise des erreurs et la construction correcte de l’arbre abstrait.

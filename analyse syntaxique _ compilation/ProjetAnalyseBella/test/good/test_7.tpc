@@ -1,0 +1,17 @@
+int tab1[51];
+int a ,     b , c ,f , If , iF , Else , Ta___[4] ,  _____tab[100] ;
+
+
+
+/*this is a comment*/
+
+//                   this is a comment
+
+
+                            int d;
+char tab2[11] , tab3[2];
+
+
+void main(void){
+    
+}

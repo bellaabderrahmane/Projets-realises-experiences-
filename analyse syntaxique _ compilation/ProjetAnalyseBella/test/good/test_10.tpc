@@ -1,0 +1,4 @@
+void main(void){
+    
+    if ( a == b){a = 3 ;}
+}

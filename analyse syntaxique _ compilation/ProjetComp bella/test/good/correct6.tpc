@@ -1,0 +1,34 @@
+int main(int b[],char c[]){
+    int s;
+    int compteur ;
+    int seuil;
+    char arbre[15];
+    compteur=10;
+    seuil=3;
+    while (compteur >= 0) {
+    if (compteur > seuil) {
+        compteur = compteur + 3;
+        if (!compteur) {
+            compteur = compteur + 2;
+        }
+        else {
+            compteur = compteur - 2;
+        }
+    } else {
+        compteur = compteur + 2;
+    }
+    if (compteur && seuil) {
+        compteur = compteur + 2;
+    }
+    if (compteur || seuil) {
+        compteur = compteur - 3;
+    }
+    if (compteur == seuil) {
+        compteur = compteur + 2;
+    }
+    if (compteur != seuil) {
+        compteur = compteur - 2;
+    }
+    return 0 ;
+}
+}
