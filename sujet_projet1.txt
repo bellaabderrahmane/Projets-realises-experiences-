@@ -1,0 +1,220 @@
+ Description et déroulement du programme
+Le jeu se déroule sur une grille de taille 28 × 22, où il y a un chemin composé des
+cases qui part du nid des monstres au camp du joueur. Il y aura des vagues de
+monstres qui sortent de leur nid pour attaquer le camp. Le but du joueur est de se
+défendre contre ces vagues de monstres avec des tours, où le joueur peut mettre une
+gemme magique qui tire sur les monstres automatiquement.
+Pour générer les gemmes magique, le joueur se dispose d’une certaine quantité
+de mana au début, et on peut aussi récupérer de mana à chaque défaite de monstre.
+Cependant, quand un monstre rentre dans le camp, une quantité de mana est nécessaire pour le bannir. Quand le joueur n’a plus de mana, il est défait et le jeu termine.
+Le score final affiché sera constitué du nombre de vagues endurées et de la quantité
+de dégât généré.
+2 Mécanisme du jeu
+Le jeu se passe sur un terrain d’une grille de taille 28 × 22. Sur la grille, le chemin
+est représenté par un ensemble de cases qui relie la case représentant le nid des
+monstres à celle représentant le camp du joueur. Les autres cases sont considérées
+comme vide. Les monstres se déplacent au centre du chemin de façon continue.
+Dans la suite, l’unité de distance sera la longueur d’un côté d’une case de la grille.
+Dans la description du mécanisme, les valeurs calculées par des formules doivent
+être reconverties en entier.
+2.1 Terrain et vagues de monstres
+Les monstres arrivent en vagues, qui aura lieu tous les 35 secondes, marchant de leur
+nid au camp du joueur. La première vague est toujours déclenchée par le joueur.
+Le joueur peut aussi déclencher la prochaine vague à tout moment. Dans ce cas
+là, le joueur gagnera un quantité de mana qui s’élève à t% de la capacité maximale
+courante de la réserve, où t est le temps restant avant la prochaine vague. Dès qu’une
+vague est déclenchée, la prochaine vague arrivera dans 35 secondes.
+Il y a quatre types de vagues de monstres :
+• Vague normale : 12 monstres, vitesse d’une case par seconde ;
+• Vague de foule : 24 monstres, vitesse d’une case par seconde ;
+• Vague agile : 12 monstres, vitesse de deux cases par seconde ;
+• Vague de boss : 2 monstres, vitesse d’une case par seconde.
+Un type est tiré au hasard pour chaque vague déclenchée, avec la probabilité 50%
+pour une vague normale, 20% pour une vague de foule, 20% pour une vague agile,
+et 10% pour une vague de boss. Pourtant une vague boss n’arrive jamais parmi les
+cinq premières vagues. Pour les monstres dans la i-ième vague, leur HP initial est
+donné par h × 1.2i
+, où h est une constante dont la valeur est laissée à votre choix.
+Cette valeur influence fortement la dynamique du jeu, donc à calibrer soigneusement.
+Cependant, les monstres dans une vague de boss font une exception, possédant un
+HP initial 12 × h × 1.2i
+.
+2.2 Gestion de mana
+Le joueur se défend contre les vagues de monstres avec les gemmes dans les tours.
+Leur création et d’autres actions se fassent en consumant de mana. La gestion de
+mana est alors crucial pour la survie.
+Le joueur possède initialement d’une réserve de mana de niveau 0 de maximum
+2000, avec le niveau initial de mana à 150. Le maximum de la réserve augmente avec
+son niveau, et sera 2000 × 1.4n au niveau n. Le joueur peut augmenter le niveau de
+la réserve en sacrifiant une quantité de mana de 25% du maximum courant, donc
+500 × 1.4n pour passer du niveau n au niveau n + 1.
+2
+Le joueur peut récupérer de mana en battant les monstres. Pour chaque démise
+d’un monstre, 10% de son HP initial multiplié par 1.3n
+(avec n le niveau de la réserve)
+est converti en mana ajouté à la réserve, mais tout mana dépassant le maximum sera
+gaspillé. Cependant, si le monstre arrive au camp, pour protéger le joueur, le monstre
+sera banni et retourné au nid automatiquement, mais au prix de consommer une
+quantité de mana égale à 15% de son HP initial multiplié par la même facteur 1.3n
+.
+S’il n’y a pas assez de mana, le monstre pénètre dans le camp, et la partie termine.
+
+
+Génération de chemin
+Le chemin sera généré aléatoirement pour chaque partie. Pour que le chemin soit
+intéressant pour le jeu, dans cette section on propose un algorithme de génération.
+Vous pouvez implanter votre propre algorithme, mais il faut absolument argumenter
+et le documenter précisément dans le rapport et dans les commentaires. Sinon, toute
+déviation sera perçue comme une faute d’implantation.
+Pour commencer, on définit la distance de Manhattan de deux cases (i1, j1) et (i2, j2)
+par |i1 − i2| + |j1 − j2|. Dans la figure suivante, les cases bleues sont à distance 1 de
+la case noire, tandis que les cases jaunes sont à distance 2.
+L’idée est d’étendre le chemin sans trop rapprocher une autre partie du chemin.
+Partant d’une case au bout de chemin en cours de construction, on dit que son étendu
+dans une direction cardinale donnée est le nombre maximal de cases consécutives
+dans cette direction sans rentrer en distance au plus 2 aux autres cases de chemin ou
+à l’extérieur de la grille, sauf la case courante et celle qui le précède.
+Commençant par le terrain vide, l’algorithme se déroule de manière suivante :
+1. Initialiser la grille à vide.
+5
+2. Choisir une case aléatoire avec une distance au moins 3 aux bords comme le nid
+des monstres.
+3. Calculer les étendus pour toute direction cardinale, puis choisir aléatoirement
+la direction initiale avec une probabilité proportionnelle à l’étendu de chacune.
+4. Si l’étendu de la direction courante est plus petit ou égal à 2, alors aller à l’étape
+7. Sinon, supposons que l’étendu est n. Tirer n valeurs aléatoires indépendamment, chacune vaut 1 avec probabilité 3/4, et 0 sinon. Soit s la somme de ces
+valeurs aléatoires. Le nombre de case à ajouter au chemin dans la direction
+courante sera max(s, 3).
+5. Avancer jusqu’à la case au bout du nouveau segment de chemin, et calculer ses
+étendus dans les deux directions en tournant 90 degrés à gauche et à droite.
+La nouvelle direction courante sera choisie parmi les deux avec une probabilité
+proportionnelle à leurs étendus.
+6. Revenir à l’étape 4.
+7. Vérifier si le chemin obtenu a fait au moins 7 virages et est de longueur au
+moins 75. Si oui, l’algorithme termine avec succès. Sinon, revenir à l’étape 1.
+Les valeurs de 7 virages et longueur minimale 75 peuvent être modifiées pour
+adapter à votre besoin. Pourtant on observe que les valeurs données ici donnent des
+résultats raisonnables. Typiquement un chemin valide sous ces paramètres est généré
+après une dizaine d’itérations. Voici un échantillonage des chemins ainsi générés.
+6
+4 Mouvement des monstres et des tirs
+Pour l’animation des mouvements de monstres et de tirs, l’affichage se fera au taux
+de rafraîchissement (ou framerate) de 60, c’est-à-dire on met à jours les positions des
+monstres et des tirs tous les 1/60 secondes. Comme tous les mouvements sont continues, tous les calculs reliés aux mouvements doivent être effectués avec les flottants.
+Les monstres d’une vague apparaissent de leur nid avec un intervalle d’une case
+(donc un intervalle de 1 seconde, sauf pour les vagues agiles et les vagues de foule, où
+c’est 0,5 secondes). Quand les monstres se déplacent, ils voyagent de façon continue
+du centre de la case courante au centre de la prochaine case du chemin. Pour donner
+un peu d’aléas, pour chaque mise à jour, au lieu de faire avancer chaque monstre à la
+même vitesse v, on met une fluctuation de 10%, c’est-à-dire que la distance parcourue
+sera une valeur tirée uniformément entre 0.9 × v/60 et 1.1 × v/60. Attention aux
+virages du chemin, où un monstre pourrait faire le virage entre deux mises à jour.
+Quand une gemme tire, le tir apparaît au centre de la gemme et se déplace à une
+vitesse de 3 cases par secondes. Cependant, le monstre visé se déplace aussi. Pour
+simuler un guidage automatique, lors de chaque mise à jour, on fait avancer le tir
+vers la position courante du monstre visé. Comme le tir se déplace plus vite que le
+monstre, il le rattrape toujours. Si la distance entre le tir et le monstre est inférieure à
+ce que le tir peut parcourir entre deux mises à jour, alors le tir est considéré comme
+atterri sur le monstre lors de la prochaine mise à jour. Quand un monstre est battu,
+tous les tirs qui le visent disparaissent.
+Pour faciliter la programmation, on vous donne les formules nécessaires pour
+calculer le mouvement d’un tir. Supposons que le tir est à position T = (xT, yT) et
+le monstre se situe à M = (xM, yM) lors de la mise à jour précédente. Le vecteur
+unitaire ⃗v = (xv, yv) de la direction du tir vers le monstre sera
+⃗v = (xv, yv) = 
+xM − xT
+∥MT∥
+,
+yM − yT
+∥MT∥
+
+.
+Ici, ∥MT∥ =
+p
+(xM − xT)
+2 + (yM − yT)
+2 est la distance entre le tir à T et le monstre à
+M. Soit d la distance que le tir parcourt entre deux mises à jour. Si ∥MT∥ ≤ d, alors
+le tir atterrit à cette mise à jour. Sinon, la nouvelle position du tir à cette mise à jour
+sera (xT + xvd, yT + yvd).
+5 Gestion de framerate
+Pour gérer le taux de mise à jour de l’affichage, deux choses sont fondamentales :
+• Votre programme ne demande pas trop de ressources.
+• Vous limitez le nombre d’appels à la fonction MLV_update_window.
+Votre fonction main ou bien une autre fonction gérant globalement votre jeu devra
+comporter une boucle maîtresse qui gère le jeu frame par frame. Tant que le joueur
+7
+ne veut pas quitter, on met l’affichage à jours, on résout tous les événements sur
+la frame, puis on calcule le temps passé et on ajuste la vitesse du jeu en attendant
+quelques millisecondes.
+1 /* Main l o o p o v e r t h e f r a m e s . . . *
+/
+2 while ( ! q ui t ) {
+3 /* Some d e c l a r a t i o n o f v a r i a b l e s *
+/
+4 . . .
+5
+6 /* Get t h e tim e in nanoscond a t t h e s t a r t o f t h e frame *
+/
+7 cl o c k _ g e t tim e (CLOCK_REALTIME, &end_time ) ;
+8 /* D i s p l a y o f t h e c u r r e n t frame , sample f u n c t i o n *
+/
+9 /* THIS FUNCTION CALLS ONCE AND ONLY ONCE MLV_update_window *
+/
+10 draw_window(&param , &g rid ) ;
+11
+12 /* We g e t h e r e some k e y b o a r d e v e n t s *
+/
+13 even t = MLV_get_event ( . . . ) ;
+14
+15 /* Dealing with t h e e v e n t s *
+/
+16 . . .
+17 /* Move t h e e n t i t i e s on t h e g r i d *
+/
+18 . . .
+19 /* C o l l i s i o n d e t e c t i o n and o t h e r game mechanisms *
+/
+20 . . .
+21
+22 /* Get t h e tim e in nanosecond a t t h e end o f t h e frame *
+/
+23 cl o c k _ ge t tim e (CLOCK_REALTIME, &new_time ) ;
+24 /* Compute t h e ti me s p e n t f o r t h e c u r r e n t frame *
+/
+25 frame time = new_time . t v _ s e c − end_time . t v _ s e c ;
+26 frame time += ( new_time . tv _n sec − end_time . tv _n sec ) / 1 . 0 E9 ;
+27
+28 /* F o r c e t h e program t o spend a t l e a s t 1/60 s e c o n d in t o t a l *
+/
+29 e x t r a tim e = 1 . 0 / 60 − frame time ;
+30 i f ( e x t r a tim e > 0 ) {
+31 MLV_wai t_milliseconds ( ( i n t ) ( e x t r a tim e *
+1 0 0 0 ) ) ;
+32 }
+33 }
+6 Interface graphique
+Pendant une partie, tout le terrain (grille 28 × 22) doit être affiché, avec le numéro
+de vague courante et l’état de la réserve de mana. Il doit aussi avoir une interface à
+côté qui permet tous les actions possibles du joueur, avec un espace pour stocker les
+gemmes non utilisées. Les déplacements des monstres et des tirs doivent être fluides.
+8
+Le contrôle doit être réactif. La fluidité et la réactivité ont un impact important sur
+la jouabilité du jeu, et seront prises en compte dans l’évaluation finale. La zone de
+tirage de chaque gemme doit être dessinée avec un cercle quand elle est sélectionnée
+par le joueur pour des actions éventuelle. Les monstres doivent être accompagné
+d’une barre d’HP. Les effets élémentaires doivent être clairement représenté, par exemple avec une couleur.
+Pour réaliser l’interface graphique, vous utiliserez obligatoirement la bibliothèque
+graphique C de l’université : libMLV. Une documentation de cette bibliothèque est accessible à l’adresse http://www-igm.univ-mlv.fr/~boussica/mlv/api/French/html/
+index.html. Elle est déjà installée sur toutes les machines de l’université. Pour
+l’installer sur votre propre machine sur Ubuntu (et d’autres distributions avec apt),
+il suffit d’installer libmlv3 et libmlv3-dev avec apt. Pour les autres distributions, il
+y a normalement les mêmes paquets dans le système de gestion de paquets. Si vous
+êtes sur Windows, il est conseillé d’installer Ubuntu avec WSL (Windows Subsystem of
+Linux), ou bien d’utiliser une machine virtuelle. Si vous avez un Mac, alors la seule
+solution sera d’installer une machine virtuelle.
+Ce choix de la libMLV est une obligation1
+. Il y a mieux, il y a aussi moins bien...
+On attend de vous que vous vous familiarisiez avec une bibliothèque écrite par un
+autre, et que sa documentation vous suffise à construire une véritable application
+graphique.
