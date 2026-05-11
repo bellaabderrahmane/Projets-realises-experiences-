@@ -1,0 +1,141 @@
+import qualified Data.List as L
+import qualified Data.Foldable as F
+
+-- Types de base
+data MTree a = MTree { rootLabel :: a, subForest :: MForest a } deriving (Eq, Ord)
+type MForest a = [MTree a]
+
+mTreeMk :: a -> [MTree a] -> MTree a
+mTreeMk rl mts = MTree {rootLabel = rl, subForest = mts}
+
+mTreeMkLeaf :: a -> MTree a
+mTreeMkLeaf rl = mTreeMk rl []
+
+-- Exercice 1
+
+mTreeCount :: Num b => MTree a -> b
+mTreeCount mt = 1 + sum (map mTreeCount (subForest mt))
+
+mTreeIsLeaf :: MTree a -> Bool
+mTreeIsLeaf mt = null (subForest mt)
+
+mTreeLeaves :: MTree a -> [a]
+mTreeLeaves mt
+  | mTreeIsLeaf mt = [rootLabel mt]
+  | otherwise = concatMap mTreeLeaves (subForest mt)
+
+mTreeCountLeaves :: Num b => MTree a -> b
+mTreeCountLeaves mt
+  | mTreeIsLeaf mt = 1
+  | otherwise = sum $ map mTreeCountLeaves (subForest mt)
+
+mTreeSum :: Num a => MTree a -> a
+mTreeSum mt = rootLabel mt + sum (map mTreeSum (subForest mt))
+
+mTreeHeight :: (Num b, Ord b) => MTree a -> b
+mTreeHeight mt
+  | mTreeIsLeaf mt = 1
+  | otherwise = 1 + maximum (map mTreeHeight (subForest mt))
+
+mTreeElem :: Eq a => a -> MTree a -> Bool
+mTreeElem x mt
+  | rootLabel mt == x = True
+  | otherwise = any (mTreeElem x) (subForest mt)
+
+mTreeMin :: Ord a => MTree a -> a
+mTreeMin mt = minimum (mTreeToList mt)
+
+mTreeMax :: Ord a => MTree a -> a
+mTreeMax mt = maximum (mTreeToList mt)
+
+mTreeToList :: MTree a -> [a]
+mTreeToList mt = rootLabel mt : concatMap mTreeToList (subForest mt)
+
+-- Exercice 2
+
+mTreeDepthFirstTraversal :: MTree a -> [a]
+mTreeDepthFirstTraversal = mTreeToList
+
+mTreeBreadthFirstTraversal :: MTree a -> [a]
+mTreeBreadthFirstTraversal mt = bfs [mt]
+  where
+    bfs [] = []
+    bfs ts = map rootLabel ts ++ bfs (concatMap subForest ts)
+
+mTreeLayer :: Int -> MTree a -> [a]
+mTreeLayer 1 mt = [rootLabel mt]
+mTreeLayer n mt
+  | n <= 0 = []
+  | otherwise = concatMap (mTreeLayer (n-1)) (subForest mt)
+
+-- Exercice 3
+
+mTreeMap :: (a -> b) -> MTree a -> MTree b
+mTreeMap f mt = MTree (f $ rootLabel mt) (map (mTreeMap f) (subForest mt))
+
+mTreeFilter :: (a -> Bool) -> MTree a -> MForest a
+mTreeFilter p mt
+  | p (rootLabel mt) = [MTree (rootLabel mt) filteredChildren]
+  | otherwise = filteredChildren
+  where filteredChildren = concatMap (mTreeFilter p) (subForest mt)
+
+-- Fonctions fold
+mTreeFold1 :: (a -> b -> b) -> b -> MTree a -> [b]
+mTreeFold1 f z (MTree rl []) = [f rl z]
+mTreeFold1 f z mt = [f rl y | mt' <- mts, y <- mTreeFold1 f z mt']
+  where
+    rl = rootLabel mt
+    mts = subForest mt
+
+mTreeCollectPaths :: MTree a -> [[a]]
+mTreeCollectPaths = mTreeFold1 (\rl acc -> map (rl:) acc) [[]]
+
+mTreeSignature :: Num a => MTree a -> [a]
+mTreeSignature = map sum . mTreeCollectPaths
+
+mTreeFold2 :: (a -> [b] -> b) -> MTree a -> b
+mTreeFold2 f mt = f rl xs
+  where
+    rl = rootLabel mt
+    xs = map (mTreeFold2 f) (subForest mt)
+
+mTreeMin' :: Ord a => MTree a -> a
+mTreeMin' = mTreeFold2 (\rl xs -> minimum (rl:xs))
+
+mTreeMax' :: Ord a => MTree a -> a
+mTreeMax' = mTreeFold2 (\rl xs -> maximum (rl:xs))
+
+mTreeSum' :: Num a => MTree a -> a
+mTreeSum' = mTreeFold2 (\rl xs -> rl + sum xs)
+
+mTreeToList' :: MTree a -> [a]
+mTreeToList' = mTreeFold2 (\rl xs -> rl : concat xs)
+
+-- Exercice 4
+
+mTreeIsoTopology :: MTree a -> MTree b -> Bool
+mTreeIsoTopology t1 t2 = length (subForest t1) == length (subForest t2)
+                          && all (uncurry mTreeIsoTopology) (zip (subForest t1) (subForest t2))
+
+mTreeCut :: (Eq b, Num b) => b -> MTree a -> MTree a
+mTreeCut n mt
+  | n <= 1 = mTreeMk (rootLabel mt) []
+  | otherwise = mTreeMk (rootLabel mt) (map (mTreeCut (n-1)) (subForest mt))
+
+-- Exercice 5
+
+subsets :: [a] -> [[a]]
+subsets [] = [[]]
+subsets (x:xs) = let rest = subsets xs in rest ++ map (x:) rest
+
+mForests :: Eq a => [a] -> [MForest a]
+mForests [] = [[]]
+mForests [x] = [[mTreeMkLeaf x]]
+mForests xs = [t:ts | (y, ys) <- pickOne xs, t <- mTrees [y], ts <- mForests ys]
+
+pickOne :: [a] -> [(a,[a])]
+pickOne [] = []
+pickOne (x:xs) = (x,xs) : [(y,x:ys) | (y,ys) <- pickOne xs]
+
+mTrees :: Eq a => [a] -> MForest a
+mTrees xs = [MTree r f | r <- xs, f <- mForests (filter (/= r) xs)]
