@@ -1,0 +1,120 @@
+Exercice 0) 
+
+
+Interface
+interface Personne {
+ name: string;
+ age: number;
+ hasDrivingLicence: boolean;
+}
+let p1 : Personne = {name: "Thomas", age: 449, hasDrivingLicence:
+true}
+console.log(p1);
+
+
+
+
+Exercice 1) 
+
+
+Un pour toi, un pour moi
+function pourToiPourMoi(name?: string) {
+ if (name == null) {
+ return "un pour toi un pour moi";
+ } else {
+ return "un pour "+ name + ' un pour moi';
+ }
+}
+function pourToiPourMoi(name: string = "toi") {
+ return "un pour "+ name + ' un pour moi';
+
+}
+console.log(pourToiPourMoi('toto'));
+console.log(pourToiPourMoi());
+Autre correction plus élégante :
+function pourToiPourMoi(name: string = "toi") {
+ return `un pour ${name} un pour moi`
+}
+
+
+Execice 2)
+
+
+ Bob le chatbot
+function tellBob(phrase: string) {
+ if (phrase.endsWith('?')) {
+ return "bien sur";
+ } else if (phrase.trim() === '') {
+ return "ok, si tu veux";
+ } else if(phrase.toLocaleUpperCase() === phrase) {
+ return "du calme"
+ } else {
+ return "peu m'importe"
+ }
+}
+console.log(tellBob('ca va ?'));
+console.log(tellBob("JEN AI MARRE"));
+console.log(tellBob(" "));
+console.log(tellBob("Salut"));
+
+
+
+
+Exercice 3)
+
+
+ Pangramme
+const alphabet: string = "abcdefghijklmnopqrstuvwxyz"
+function isPangram(phrase: string) : boolean {
+ for(let lettre of alphabet) {
+ if (phrase.indexOf(lettre) === -1) {
+ return false;
+ }
+ }
+ return true;
+}
+console.log(isPangram("eez"));
+console.log(isPangram(alphabet));
+console.log(isPangram("portez ce vieux whisky au juge blond qui
+fume"));
+
+
+
+Exercice 4)
+
+
+
+Les allergies
+console.clear()
+const allergies = {
+ oeuf: 1,
+ cacahuete: 2,
+ "fruit de mer":4,
+ fraise: 8,
+ tomate: 16,
+ chocolat: 32,
+ pollen: 64,
+ chats: 128
+}
+console.log(Object.entries(allergies).reverse());
+class Patient {
+ private patientAllergies: string [] = []
+ constructor(patientScore: number) {
+ for (let [allergie, score] of Object.entries(allergies).reverse()) {
+ if (score <= patientScore) {
+ this.patientAllergies.push(allergie);
+ patientScore -= score
+ }
+ }
+ }
+ isAllergicTo(item: string) : boolean {
+ return this.patientAllergies.includes(item);
+ }
+ listAllergies(): string[] {
+ return this.patientAllergies;
+ }
+}
+const patient: Patient = new Patient(34);
+console.log(patient.listAllergies())
+console.log(patient.isAllergicTo("chat"))
+console.log(patient.isAllergicTo("cacahuete"))
